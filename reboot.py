@@ -30,8 +30,13 @@ if __name__ == "__main__":
     serverList = sqlConnection.getRebootStatus()
 
     for x in serverList:
+        print(f"Checking {x[0]}")
         if x[2] == 1 and x[3] == 0:
             serverUsername = sqlConnection.getUsername(x[0])[0]
             serverPassword = sqlConnection.getPassword(x[0])[0]
-            invokeReboot(x[1], 22, serverUsername, serverPassword)
+            rebootReq = invokeReboot(x[1], 22, serverUsername, serverPassword)
+            for line in rebootReq:
+                print(line)
             sqlConnection.updateRebootStatus(x[0], 0)
+        else:
+            print("No reboot required")
