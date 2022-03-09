@@ -29,7 +29,6 @@ sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt autoclean -y"""
 
-rebooServerCommand = "sudo reboot"
 
 # Functions
 def updateDB(serverName, status):
@@ -63,15 +62,6 @@ def runUpdates(host, port, username, password):
         lines = stdout.readlines()
         return lines
 
-def rebootSSH(host, port, username, password):
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host, port, username, password)
-
-        stdin, stdout, stderr = ssh.exec_command(rebooServerCommand)
-        lines = stdout.readlines()
-        return line
-
 # Main:
 if __name__ == "__main__":
     serverList = getServerList()
@@ -85,6 +75,3 @@ if __name__ == "__main__":
         rebootReq = checkForReboot(server[2], 22, server[3], server[4])
         print(rebootReq[0])
         updateDB(server[1], int(rebootReq[0]))
-        if rebootReq[0] == "1":
-            rebootSSH(server[2], 22, server[3], server[4])
-            rebootConfirm = updateDB(server[1], 0)
